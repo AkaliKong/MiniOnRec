@@ -29,9 +29,16 @@ def generate_text(item2feature, features):
         for meta_key in features:
             if meta_key in data:
                 meta_value = clean_text(data[meta_key])
-                text.append(meta_value.strip())
+                cleaned = meta_value.strip()
 
-        item_text_list.append([int(item), text])
+                # skip empty fields
+                if cleaned != "":
+                    text.append(cleaned)
+
+        # Fallback: avoid empty text causing Qwen to crash
+        if len(text) == 0:
+            text = ["unknown item"]
+        item_text_list.append([int(item), " ".join(text)])
 
     return item_text_list
 
@@ -51,15 +58,16 @@ def generate_item_embedding(args, item_text_list, tokenizer, model, word_drop_ra
     print(' Dataset: ', args.dataset)
 
     items, texts = zip(*item_text_list)
-    order_texts = [[0]] * len(items)
+    order_texts = [""] * len(items)
     for item, text in zip(items, texts):
         order_texts[item] = text
     for text in order_texts:
         assert text != [0]
 
     embeddings = []
-    start, batch_size = 0, 1
+    start, batch_size = 0, 32
     with torch.no_grad():
+        pbar = tqdm(total=len(order_texts), desc="Generating embeddings")
         while start < len(order_texts):
             if (start+1)%100==0:
                 print("==>",start+1)
@@ -88,10 +96,14 @@ def generate_item_embedding(args, item_text_list, tokenizer, model, word_drop_ra
                 # For Qwen, we need to handle tokenization differently
                 encoded_sentences = tokenizer(sentences, max_length=args.max_sent_len,
                                               truncation=True, return_tensors='pt', padding="longest").to(args.device)
-                
+
+                input_ids = encoded_sentences.input_ids.long().to(args.device)
+                attention_mask = encoded_sentences.attention_mask.to(args.device)
                 # Get model outputs
-                outputs = model(input_ids=encoded_sentences.input_ids,
-                                attention_mask=encoded_sentences.attention_mask)
+                outputs = model(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask
+                )
     
                 # For Qwen models, use the last hidden state
                 masked_output = outputs.last_hidden_state * encoded_sentences['attention_mask'].unsqueeze(-1)
@@ -102,7 +114,8 @@ def generate_item_embedding(args, item_text_list, tokenizer, model, word_drop_ra
             field_mean_embedding = torch.stack(field_embeddings, dim=0).mean(dim=0)
             embeddings.append(field_mean_embedding)
             start += batch_size
-
+            pbar.update(batch_size)
+    pbar.close()
     embeddings = torch.cat(embeddings, dim=0).numpy()
     print('Embeddings shape: ', embeddings.shape)
 
@@ -171,7 +184,11 @@ if __name__ == '__main__':
             plm_tokenizer.pad_token_id = 0
     
     plm_model = plm_model.to(device)
-    plm_model.eval()  # Set model to evaluation mode
+
+    if torch.cuda.device_count() > 1:
+        print(f"Using {torch.cuda.device_count()} GPUs")
+        plm_model = torch.nn.DataParallel(plm_model)
+        plm_model.eval()  # Set model to evaluation mode
 
     generate_item_embedding(args, item_text_list, plm_tokenizer,
                             plm_model, word_drop_ratio=args.word_drop_ratio)
