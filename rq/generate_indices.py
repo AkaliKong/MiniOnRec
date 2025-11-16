@@ -48,7 +48,12 @@ output_file = f"{dataset}.index.json"
 output_file = os.path.join(output_dir,output_file)
 device = torch.device("cuda:0")
 
-ckpt = torch.load(ckpt_path, map_location=torch.device('cpu'))
+ckpt = torch.load(
+    ckpt_path,
+    map_location=torch.device('cpu'),
+    weights_only=False
+)
+
 args = ckpt["args"]
 state_dict = ckpt["state_dict"]
 
