@@ -208,6 +208,8 @@ def main():
     parser = argparse.ArgumentParser(
         description="FAISS-RQ + Sinkhorn uniform mapping")
     parser.add_argument("--dataset", default="Industrial_and_Scientific")
+    parser.add_argument("--data_path", type=str, default=None)
+
     parser.add_argument("--num_levels", type=int, default=3)
     parser.add_argument("--codebook_size", type=int, default=256)
     parser.add_argument("--uniform", action="store_true",
@@ -218,7 +220,11 @@ def main():
     parser.add_argument("--output_root", default="../data")
     args = parser.parse_args()
 
-    data_path = f"../data/Amazon/index/{args.dataset}.emb-qwen-td.npy"
+    if args.data_path is not None:
+        data_path = args.data_path
+    else:
+        data_path = f"../data/Amazon/index/{args.dataset}.emb-qwen-td.npy"
+
     out_dir = os.path.join(args.output_root, args.dataset)
     os.makedirs(out_dir, exist_ok=True)
     out_json = os.path.join(out_dir, f"{args.dataset}.faiss-rq.index.json")
