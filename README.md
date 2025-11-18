@@ -166,6 +166,9 @@ bash rq/amazon_text2emb.sh \
 ```
 
 ### 3. SID Construction
+
+Choose either 3.1.1 or 3.1.2
+
 - **3.1.1 Train RQ-VAE on the embeddings**
 ```
 bash rq/rqvae.sh \
