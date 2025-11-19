@@ -167,7 +167,7 @@ def analyze_codes(codes, title="", verbose=True):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Constrained RQ-KMeans clustering")
-    parser.add_argument('--root', type=str, default="./data/Amazon/index", help="Root directory for data")
+    parser.add_argument('--root', type=str, default="./data/Amazon", help="Root directory for data")
     parser.add_argument("--dataset", type=str, required=True, help="Dataset name (e.g., Industrial_and_Scientific)")
     parser.add_argument("--k", type=int, default=256, help="Number of clusters per level")
     parser.add_argument("--l", type=int, default=4, help="Number of levels")
@@ -192,6 +192,8 @@ if __name__ == "__main__":
     print("=" * 60)
 
     t0 = time.time()
+    print("root: ", args.root)
+    print("dataset: ", args.dataset)
     data_path = os.path.join(args.root, args.dataset + '.emb-qwen-td.npy')
 
     if not os.path.exists(data_path):
@@ -247,7 +249,7 @@ if __name__ == "__main__":
     for id, row in enumerate(codes_dedup.iter_rows(named=True)):
         codes_ = []
         for i, code in enumerate(row['codes']):
-            codes_.append(f'<|{chr(97+i)}_{code}|>')
+            codes_.append(f'<{chr(97+i)}_{code}>')
         codes_json[str(id)] = codes_
 
     # Save JSON index
