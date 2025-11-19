@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Convert dataset (Sports/Industrial_and_Scientific) to ReRe format with semantic IDs
+Convert dataset (Office/Industrial_and_Scientific) to MiniOneRec format with semantic IDs
 """
 
 import json
@@ -52,10 +52,10 @@ def create_item_info_file(items: Dict[str, Dict], item_to_semantic: Dict[str, Li
                 f.write(f"{semantic_id}\t{item_title}\t{item_id}\n")
 
 def convert_interactions_to_csv(splits: Dict[str, List], items: Dict[str, Dict], 
-                               item_to_semantic: Dict[str, List], output_dir: str, category: str = "Sports",
+                               item_to_semantic: Dict[str, List], output_dir: str, category: str = "Office_Products",
                                max_valid_samples: int = None, max_test_samples: int = None, seed: int = 42,
                                keep_longest_only: bool = True):
-    """Convert interaction data to ReRe CSV format using semantic IDs"""
+    """Convert interaction data to MiniOneRec CSV format using semantic IDs"""
     
     import random
     random.seed(seed)
@@ -159,11 +159,11 @@ def convert_interactions_to_csv(splits: Dict[str, List], items: Dict[str, Dict],
                 print(f"    item_title: {rows[0]['item_title'][:50]}...")
 
 def main():
-    parser = argparse.ArgumentParser(description='Convert dataset (Sports/Industrial_and_Scientific) to MiniOneRec format with semantic IDs')
+    parser = argparse.ArgumentParser(description='Convert dataset (Office_Products/Industrial_and_Scientific) to MiniOneRec format with semantic IDs')
     parser.add_argument('--data_dir', type=str, 
                        help='Path to dataset directory')
     parser.add_argument('--dataset_name', type=str, default='Industrial_and_Scientific',
-                       help='Dataset name (Sports, Industrial_and_Scientific)')
+                       help='Dataset name (Office_Products, Industrial_and_Scientific)')
     parser.add_argument('--output_dir', type=str,
                        help='Output directory for MiniOneRec format data')
     parser.add_argument('--category', type=str, default=None,
