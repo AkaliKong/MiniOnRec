@@ -159,15 +159,13 @@ def convert_interactions_to_csv(splits: Dict[str, List], items: Dict[str, Dict],
                 print(f"    item_title: {rows[0]['item_title'][:50]}...")
 
 def main():
-    parser = argparse.ArgumentParser(description='Convert dataset (Sports/Industrial_and_Scientific) to ReRe format with semantic IDs')
+    parser = argparse.ArgumentParser(description='Convert dataset (Sports/Industrial_and_Scientific) to MiniOneRec format with semantic IDs')
     parser.add_argument('--data_dir', type=str, 
-                       default='/home/huangyanwen.hyw/code_linlin/ReRe-main/LCRec_data/Sports',
                        help='Path to dataset directory')
-    parser.add_argument('--dataset_name', type=str, default='Sports',
+    parser.add_argument('--dataset_name', type=str, default='Industrial_and_Scientific',
                        help='Dataset name (Sports, Industrial_and_Scientific)')
     parser.add_argument('--output_dir', type=str,
-                       default='/home/huangyanwen.hyw/code_linlin/ReRe-main/data/Amazon',
-                       help='Output directory for ReRe format data')
+                       help='Output directory for MiniOneRec format data')
     parser.add_argument('--category', type=str, default=None,
                        help='Category name for output files (if None, will use dataset_name)')
     parser.add_argument('--max_valid_samples', type=int, default=None,
@@ -178,8 +176,6 @@ def main():
                        help='Random seed for sampling')
     parser.add_argument('--keep_longest_only', action='store_true', default=False,
                        help='Keep only longest sequence per user in train data (default: False)')
-    parser.add_argument('--no_keep_longest_only', dest='keep_longest_only', action='store_false',
-                       help='Keep all sequences per user in train data')
     
     args = parser.parse_args()
     
@@ -225,26 +221,13 @@ def main():
             )
     
     print(f"\nConversion completed! Data saved to {args.output_dir}")
-    print(f"You can now use these files with ReRe training scripts by setting category='{args.category}'")
+    print(f"You can now use these files with MiniOneRec training scripts by setting category='{args.category}'")
     
     # Show sampling information if limits were applied
     if args.max_valid_samples is not None:
         print(f"Validation set was limited to {args.max_valid_samples} samples")
     if args.max_test_samples is not None:
         print(f"Test set was limited to {args.max_test_samples} samples")
-    
-    print(f"\nTo run ReRe training:")
-    print(f"1. Modify rere.sh to use category='{args.category}'")
-    print(f"2. Run: bash rere.sh")
-    print(f"\nUsage examples:")
-    print(f"  # Convert Sports dataset:")
-    print(f"  python convert_dataset_semantic.py --dataset_name Sports --data_dir /path/to/LCRec_data/Sports")
-    print(f"  # Convert Industrial_and_Scientific dataset:")
-    print(f"  python convert_dataset_semantic.py --dataset_name Industrial_and_Scientific --data_dir /path/to/LCRec_data/Industrial_and_Scientific")
-    print(f"  # Keep all sequences (not just longest) for train data:")
-    print(f"  python convert_dataset_semantic.py --no_keep_longest_only")
-    print(f"  # Limit validation to 1000 samples and test to 500 samples:")
-    print(f"  python convert_dataset_semantic.py --max_valid_samples 1000 --max_test_samples 500")
 
 if __name__ == '__main__':
     main()
