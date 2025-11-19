@@ -20,7 +20,7 @@ Scaling Generative Recommendation**
 ## 📢 Announcement
 
 - 2025-11-19 — The SID construction method in **constrained-RQ-Kmeans** has been updated.
-- 
+
 - 2025-11-07 — Thank you for submitting issues! Based on your feedback, we have released a new implementation. If you encounter any problems while running the code, please update to and consult the **latest version** first.
   
 - 2025-11-07 — You can now choose to freeze the LLM parameters during the SFT stage and train only the embeddings for the newly added SID vocabulary.
