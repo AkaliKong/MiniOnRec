@@ -19,6 +19,8 @@ Scaling Generative Recommendation**
 
 ## 📢 Announcement
 
+- 2025-11-19 — The SID construction method in **constrained-RQ-Kmeans** has been updated.
+- 
 - 2025-11-07 — Thank you for submitting issues! Based on your feedback, we have released a new implementation. If you encounter any problems while running the code, please update to and consult the **latest version** first.
   
 - 2025-11-07 — You can now choose to freeze the LLM parameters during the SFT stage and train only the embeddings for the newly added SID vocabulary.
@@ -73,6 +75,9 @@ Scaling Generative Recommendation**
 | `rq/rqkmeans_faiss.py`                |   FAISS-based implementation of the RQ-KMeans algorithm                                       |
 | `rq/rqvae.sh`                |   Shell script to train RQ-VAE on Amazon item embeddings                        |
 | `rq/rqvae.py`                |   Python implementation of RQ-VAE training                                            |
+| `rq/rqkmeans_faiss.py`                |   Python implementation of RQ-Kmeans training based on faiss                                          |
+| `rq/rqkmeans_constrained.sh`                |   Shell script to train constrained RQ-Kmeans constrained on Amazon item embeddings                        |
+| `rq/rqvae.py`                |   Python implementation of constrained RQ-Kmeans training                                            |
 | `requirements.txt`        | List of Python dependencies                                                                                |
 
 ---
@@ -167,7 +172,7 @@ bash rq/amazon_text2emb.sh \
 
 ### 3. SID Construction
 
-Choose either 3.1.1 or 3.1.2
+Choose either 3.1.1 or 3.1.2 or 3.1.3
 
 - **3.1.1 Train RQ-VAE on the embeddings**
 ```
@@ -186,7 +191,15 @@ conda install faiss-gpu
 python rqkmeans_faiss.py --dataset Industrial_and_Scientific # The RQ-Kmeans method based on semantic embeddings has a relatively high collision rate.
 ```
 
-- **3.2 Generate indices**
+- **3.1.3 Train constrained RQ-Kmeans on the embeddings**
+For conflicting items, we add an extra layer to perform deduplication; meanwhile, we use a balanced constraint to ensure that the SIDs are evenly distributed.
+```
+pip install k_means_constrained
+pip install polars
+bash rqkmeans_constrained.sh
+```
+
+- **3.2 Generate indices(only RQ-VAE needed)**
 ```
 python rq/generate_indices.py
 ```
