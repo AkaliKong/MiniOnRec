@@ -9,7 +9,7 @@ for category in "Industrial_and_Scientific"; do
 
     HF_ENDPOINT=https://hf-mirror.com accelerate launch \
                                     --config_file ./config/zero2_opt.yaml \
-                                    --num_processes 4 --main_process_port 29503 \
+                                    --num_processes 8 --main_process_port 29503 \
                                     rl.py \
                         --model_path path_to_model \
                         --train_batch_size 64 \
