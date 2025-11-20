@@ -19,6 +19,8 @@ Scaling Generative Recommendation**
 
 ## 📢 Announcement
 
+- 2025-11-20 — The SID construction method in **RQ-Kmeans+** has been updated (first proposed in GPR and this is the first open-source reproduction.).
+
 - 2025-11-19 — We implemented a multi-GPU parallel text-to-embedding method based on Accelerate, which is significantly more efficient than the original version: rq/text2emb/amazon_text2emb.py
 
 - 2025-11-19 — The SID construction method in **constrained-RQ-Kmeans** has been updated.
@@ -78,8 +80,15 @@ Scaling Generative Recommendation**
 | `rq/rqvae.sh`                |   Shell script to train RQ-VAE on Amazon item embeddings                        |
 | `rq/rqvae.py`                |   Python implementation of RQ-VAE training                                            |
 | `rq/rqkmeans_faiss.py`                |   Python implementation of RQ-Kmeans training based on faiss                                          |
+| `rq/rqkmeans_constrained.py`                |   Python implementation of Constrained RQ-Kmeans                         |
 | `rq/rqkmeans_constrained.sh`                |   Shell script to train constrained RQ-Kmeans constrained on Amazon item embeddings                        |
 | `rq/rqvae.py`                |   Python implementation of constrained RQ-Kmeans training                                            |
+| `rq/rqkmeans_constrained.py`                |   Python implementation of Constrained RQ-Kmeans                         |
+| `rq/rqkmeans_constrained.sh`                |   Shell script to train constrained RQ-Kmeans constrained on Amazon item embeddings                        |
+| `rq/rqkmeans_plus.py`                |   Python implementation of RQ-Kmeans+                        |
+| `rq/rqkmeans_plus.sh`                |   Shell script to train RQ-Kmeans+ constrained on Amazon item embeddings                        |
+| `rq/generate_indices_plus.py`                |   Generates the SID file after training an RQ-Kmeans+ model                                       |
+| `rq/generate_indices_plus.sh`                |   Shell script to generate the SID file after training an RQ-Kmeans+ model                                       |
 | `requirements.txt`        | List of Python dependencies                                                                                |
 
 ---
@@ -174,7 +183,7 @@ bash rq/amazon_text2emb.sh \
 
 ### 3. SID Construction
 
-Choose either 3.1.1, 3.1.2, or 3.1.3.
+Choose either 3.1.1, 3.1.2, 3.1.3 or 3.1.4.
 
 - **3.1.1 Train RQ-VAE on the embeddings**
 ```
@@ -201,9 +210,18 @@ pip install polars
 bash rqkmeans_constrained.sh
 ```
 
-- **3.2 Generate indices(only RQ-VAE needed)**
+- **3.1.4 Train RQ-Kmeans+ on the embeddings**
+```
+pip install k_means_constrained
+pip install polars
+bash rqkmeans_plus.sh
+```
+
+- **3.2 Generate indices(only RQ-VAE & RQ-Kmeans+ needed)**
 ```
 python rq/generate_indices.py
+# or
+bash rq/generate_indices_plus.sh
 ```
 
 - **3.3 Convert dataset format**
