@@ -263,7 +263,7 @@ def main():
     print("shape:", data.shape)
 
     rq = train_faiss_rq(data, args.num_levels, args.codebook_size)
-    codes_raw = encode_with_rq(rq, data, verbose=True)
+    codes_raw = encode_with_rq(rq, data, args.codebook_size, verbose=True)
 
     analyze_codes(codes_raw, "Before balancing:")
 
