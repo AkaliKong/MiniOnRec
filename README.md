@@ -73,16 +73,12 @@ Scaling Generative Recommendation**
 | `convert_dataset.py`                | Converts an RQ-trained dataset to the SFT-then-RL format                                            |
 | `data/amazon18_data_process.sh`                |    Shell script to filter and preprocess Amazon data into an RQ-ready format                                      |
 | `data/amazon18_data_process.py`                |   Python implementation of the Amazon data preprocessing pipeline                                        |
-| `rq/amazon_text2emb.sh`                |   Shell script to generate item embeddings (title + description) via emb_model for the Amazon dataset                                   |
-| `rq/amazon_text2emb.py`                |   Python implementation of the above embedding generation                                         |
+| `rq/text2emb/amazon_text2emb.sh`                |   Shell script to generate item embeddings (title + description) via emb_model for the Amazon dataset                                   |
+| `rq/text2emb/amazon_text2emb.py`                |   Python implementation of the above embedding generation                                         |
 | `rq/generate_indices.py`                |   Generates the SID file after training an RQ-VAE model                                       |
-| `rq/rqkmeans_faiss.py`                |   FAISS-based implementation of the RQ-KMeans algorithm                                       |
 | `rq/rqvae.sh`                |   Shell script to train RQ-VAE on Amazon item embeddings                        |
 | `rq/rqvae.py`                |   Python implementation of RQ-VAE training                                            |
 | `rq/rqkmeans_faiss.py`                |   Python implementation of RQ-Kmeans training based on faiss                                          |
-| `rq/rqkmeans_constrained.py`                |   Python implementation of Constrained RQ-Kmeans                         |
-| `rq/rqkmeans_constrained.sh`                |   Shell script to train constrained RQ-Kmeans constrained on Amazon item embeddings                        |
-| `rq/rqvae.py`                |   Python implementation of constrained RQ-Kmeans training                                            |
 | `rq/rqkmeans_constrained.py`                |   Python implementation of Constrained RQ-Kmeans                         |
 | `rq/rqkmeans_constrained.sh`                |   Shell script to train constrained RQ-Kmeans constrained on Amazon item embeddings                        |
 | `rq/rqkmeans_plus.py`                |   Python implementation of RQ-Kmeans+                        |
