@@ -19,7 +19,7 @@ Scaling Generative Recommendation**
 
 ## 📢 Announcement
 
-- 2025-11-20 — The SID construction method in **RQ-Kmeans+** has been updated (first proposed in GPR and this is the first open-source reproduction).
+- 2025-11-20 — The SID construction method in **RQ-Kmeans+** has been updated (first proposed in **GPR** and this is the first open-source reproduction).
 
 - 2025-11-19 — We implemented a multi-GPU parallel text-to-embedding method based on Accelerate, which is significantly more efficient than the original version: rq/text2emb/amazon_text2emb.py
 
