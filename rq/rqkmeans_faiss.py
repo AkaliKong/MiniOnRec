@@ -43,14 +43,42 @@ def train_faiss_rq(data, num_levels=3, codebook_size=256, verbose=True):
         print("  training completed\n")
     return rq
 
+def unpack_rq_codes(codes, nbits, num_levels):
+    """
+    Unpack FAISS's bit-packed codes into integer index arrays
 
-def encode_with_rq(rq, data, verbose=True):
+    Parameters:
+    codes: (N, M_bytes) uint8 array, from rq.compute_codes
+    nbits: number of bits per level (e.g., 512 -> 9 bits)
+    num_levels: number of levels (e.g., 3)
+
+    Returns:
+    (N, num_levels) int32 array containing the unpacked indices
+    """
+    N = codes.shape[0]
+    # FAISS uses Little Endian packing
+    packed_ints = np.zeros(N, dtype=np.int64)
+    for i in range(codes.shape[1]):
+        packed_ints |= codes[:, i].astype(np.int64) << (8 * i)
+    unpacked_codes = np.zeros((N, num_levels), dtype=np.int32)
+    mask = (1 << nbits) - 1  # e.g., mask for 9 bits is 511 (0x1FF)
+    for i in range(num_levels):
+        unpacked_codes[:, i] = (packed_ints >> (i * nbits)) & mask
+    return unpacked_codes
+
+def encode_with_rq(rq, data, codebook_size, verbose=True):
     data = np.ascontiguousarray(data.astype(np.float32))
+    nbits = int(np.log2(codebook_size))
     if verbose:
         print(f"Encoding {data.shape[0]} vectors ...")
-    codes = rq.compute_codes(data)
-    if codes.ndim == 1:
-        codes = codes.reshape(-1, rq.M)
+    codes_packed = rq.compute_codes(data)
+    if nbits % 8 == 0:
+        codes = codes_packed.astype(np.int32)
+    else:
+        codes = unpack_rq_codes(codes_packed, nbits, rq.M)
+    if codes_packed.ndim == 1:
+        n_bytes = (rq.M * nbits + 7) // 8
+        codes_packed = codes_packed.reshape(-1, n_bytes)
     codes = codes.astype(np.int32)
     if verbose:
         print(f"  done, codes.shape={codes.shape}\n")
@@ -235,7 +263,7 @@ def main():
     print("shape:", data.shape)
 
     rq = train_faiss_rq(data, args.num_levels, args.codebook_size)
-    codes_raw = encode_with_rq(rq, data, verbose=True)
+    codes_raw = encode_with_rq(rq, data, args.codebook_size, verbose=True)
 
     analyze_codes(codes_raw, "Before balancing:")
 
