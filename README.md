@@ -156,6 +156,7 @@ pip install -r requirements.txt
   [Amazon Reviews 2023](https://amazon-reviews-2023.github.io/), 
   [Amazon Reviews 2018](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/), 
   [Amazon Reviews 2014](https://cseweb.ucsd.edu/~jmcauley/datasets/amazon/links.html).
+  Note: The Industrial and Office datasets are included in Amazon 2018; the Amazon 2014 and 2023 versions require slight modifications to our data/amazon18_data_process.py.
 - **2.2 Filter and preprocess**
 ```
 bash data/amazon18_data_process.sh \
