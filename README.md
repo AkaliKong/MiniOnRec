@@ -276,6 +276,11 @@ This project is developed by the following institutions:
  
 ---
 
+## 🧩 Contributing
+
+We welcome and appreciate all contributions! If you have ideas to improve MiniOneRec, please feel free to submit a pull request (PR).
+
+---
 ## 🙏 Acknowledgements
 
 This repository reuses or adapts portions of code from the following open-source projects. We gratefully acknowledge their authors and contributors:
